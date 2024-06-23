@@ -21,12 +21,15 @@ jobs:
         sudo apt install -y python3-pip
         pip3 install buildozer cython
 
-    - name: Install NDK
+    - name: Install Android SDK and NDK
       run: |
-        mkdir -p $ANDROID_HOME/ndk
-        wget https://dl.google.com/android/repository/android-ndk-r25b-linux.zip
-        unzip android-ndk-r25b-linux.zip -d $ANDROID_HOME/ndk
-        mv $ANDROID_HOME/ndk/android-ndk-r25b $ANDROID_HOME/ndk/25.1.8937393
+        sudo apt-get install -y wget unzip
+        mkdir -p $ANDROID_HOME/cmdline-tools
+        wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
+        unzip commandlinetools-linux-8512546_latest.zip -d $ANDROID_HOME/cmdline-tools
+        mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "build-tools;30.0.3" "platform-tools" "platforms;android-30" "ndk;25.1.8937393"
 
     - name: Build the APK
       run: buildozer android debug

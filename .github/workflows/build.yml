@@ -22,6 +22,8 @@ jobs:
         pip3 install buildozer cython
 
     - name: Install Android SDK and NDK
+      env:
+        ANDROID_HOME: ${{ github.workspace }}/android-sdk
       run: |
         sudo apt-get install -y wget unzip
         mkdir -p $ANDROID_HOME/cmdline-tools
@@ -29,7 +31,8 @@ jobs:
         unzip commandlinetools-linux-8512546_latest.zip -d $ANDROID_HOME/cmdline-tools
         mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
         yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "build-tools;30.0.3" "platform-tools" "platforms;android-30" "ndk;25.1.8937393"
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "build-tools;30.0.3" "platform-tools" "platforms;android-30" "ndk;25.1.8937393" "build-tools;35.0.0"
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
     - name: Build the APK
       run: buildozer android debug

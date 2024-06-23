@@ -34,7 +34,7 @@ android.minapi = 21
 android.sdk = 30
 
 # Android NDK version to use
-android.ndk = 21b
+android.ndk = 25b
 
 # Enable Android logcat
 android.logcat_filters = *:S python:D

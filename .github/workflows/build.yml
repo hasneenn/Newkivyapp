@@ -1,40 +1,44 @@
-name: Build Kivy App
-
+name: CI
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
+      # used to cache dependencies with a timeout
+      - name: Get Date
+        id: get-date
+        run: |
+          echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
+        shell: bash
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y python3-pip
-        pip install --upgrade pip
-        pip install buildozer cython
-        sudo apt-get install -y openjdk-8-jdk
+      - name: Cache Buildozer global directory
+        uses: actions/checkout@v4
+        with:
+          path: .buildozer_global
+          key: buildozer-global-${{ hashFiles('buildozer.spec') }} # Replace with your path
 
-    - name: Set up Android SDK
-      run: |
-        mkdir -p $HOME/.buildozer/android/platform
-        cd $HOME/.buildozer/android/platform
-        wget https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip
-        unzip commandlinetools-linux-6609375_latest.zip -d cmdline-tools
-        mkdir -p android-sdk
-        yes | ./cmdline-tools/tools/bin/sdkmanager --sdk_root=${ANDROID_HOME} --licenses
-        ./cmdline-tools/tools/bin/sdkmanager --sdk_root=${ANDROID_HOME} "platforms;android-30" "build-tools;35.0.0"
+      - name: Checkout main directory
+        uses: actions/checkout@v4
+        with:
+          path: main # Replace with the correct path
+          ref: main # Specify the branch or tag you want to checkout
+          token: ${{ secrets.GITHUB_TOKEN }} # Ensure you have appropriate permissions
 
-    - name: Build the app
-      run: buildozer android debug
+      - name: Build with Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          workdir: main  # Assuming `main` is the directory you want to build in
+          buildozer_version: stable
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: ${{ steps.buildozer.outputs.filename }}

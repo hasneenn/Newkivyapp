@@ -23,18 +23,16 @@ jobs:
           path: .buildozer_global
           key: buildozer-global-${{ hashFiles('buildozer.spec') }} # Replace with your path
 
-      - name: Checkout main directory
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          path: main # Replace with the correct path
-          ref: main # Specify the branch or tag you want to checkout
-          token: ${{ secrets.GITHUB_TOKEN }} # Ensure you have appropriate permissions
+          path: .buildozer
+          key: ${{ runner.os }}-${{ steps.get-date.outputs.date }}-${{ hashFiles('buildozer.spec') }}
 
       - name: Build with Buildozer
         uses: ArtemSBulgakov/buildozer-action@v1
         id: buildozer
         with:
-          workdir: main  # Assuming `main` is the directory you want to build in
+          workdir: buildozer android debug
           buildozer_version: stable
 
       - name: Upload artifacts

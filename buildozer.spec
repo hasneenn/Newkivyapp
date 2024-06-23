@@ -41,13 +41,9 @@ android.logcat_filters = *:S python:D
 source.dir = .
 
 # Additional Java .jar or .aar libraries to add
-# android.add_jars =
+android.add_jars = foo.jar, bar.jar
 
 [buildozer]
 
 # Log level (1 = debug, 2 = info, 3 = warning, 4 = error)
 log_level = 2
-warn_on_root = 1
-
-# Automatically accept SDK licenses
-android.accept_sdk_license = True

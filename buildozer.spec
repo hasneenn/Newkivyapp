@@ -40,7 +40,10 @@ android.ndk = 21b
 android.logcat_filters = *:S python:D
 
 # Source directory where your main.py is located
-source.dir = main()
+source.dir = main
+
+# Additional Java .jar or .aar libraries to add
+# android.add_jars =
 
 [buildozer]
 

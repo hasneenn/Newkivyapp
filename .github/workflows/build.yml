@@ -1,63 +1,40 @@
-name: Build with Buildozer
+name: Build Kivy App
 
-on: [push]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up JDK
-      uses: actions/setup-java@v2
-name: Build with Buildozer
-
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up JDK
-      uses: actions/setup-java@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        distribution: 'zulu'
-        java-version: '11'
+        python-version: 3.8
 
-    - name: Install Buildozer and dependencies
+    - name: Install dependencies
       run: |
-        sudo apt update
-        sudo apt install -y python3-pip
-        pip3 install buildozer cython
+        sudo apt-get update
+        sudo apt-get install -y python3-pip
+        pip install --upgrade pip
+        pip install buildozer cython
+        sudo apt-get install -y openjdk-8-jdk
 
-    - name: Install Android SDK and NDK
-      env:
-        ANDROID_HOME: ${{ github.workspace }}/android-sdk
+    - name: Set up Android SDK
       run: |
-        sudo apt-get install -y wget unzip
-        mkdir -p $ANDROID_HOME/cmdline-tools
-        wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
-        unzip commandlinetools-linux-8512546_latest.zip -d $ANDROID_HOME/cmdline-tools
-        mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+        mkdir -p $HOME/.buildozer/android/platform
+        cd $HOME/.buildozer/android/platform
+        wget https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip
+        unzip commandlinetools-linux-6609375_latest.zip -d cmdline-tools
+        mkdir -p android-sdk
+        yes | ./cmdline-tools/tools/bin/sdkmanager --sdk_root=${ANDROID_HOME} --licenses
+        ./cmdline-tools/tools/bin/sdkmanager --sdk_root=${ANDROID_HOME} "platforms;android-30" "build-tools;35.0.0"
 
-    - name: Accept Android SDK licenses
-      env:
-        ANDROID_HOME: ${{ github.workspace }}/android-sdk
-      run: |
-        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses
-
-    - name: Install required Android packages
-      env:
-        ANDROID_HOME: ${{ github.workspace }}/android-sdk
-      run: |
-        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --install "build-tools;30.0.3" "platform-tools" "platforms;android-30" "ndk;25.1.8937393"
-        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses
-        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --install "build-tools;35.0.0"
-        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses
-
-    - name: Build the APK
+    - name: Build the app
       run: buildozer android debug

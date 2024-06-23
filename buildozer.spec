@@ -42,12 +42,8 @@ android.logcat_filters = *:S python:D
 # Source directory where your main.py is located
 source.dir = main
 
-# Additional Java .jar or .aar libraries to add
-# android.add_jars =
-
 [buildozer]
 
-# Uncomment the next line (and comment the first) to enable verbose mode for compilation
 # Log level (1 = debug, 2 = info, 3 = warning, 4 = error)
 log_level = 2
 warn_on_root = 1

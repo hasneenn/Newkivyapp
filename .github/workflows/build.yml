@@ -32,7 +32,7 @@ jobs:
         uses: ArtemSBulgakov/buildozer-action@v1
         id: buildozer
         with:
-          workdir: buildozer
+          workdir: .
           buildozer_version: stable
 
       - name: Upload artifacts

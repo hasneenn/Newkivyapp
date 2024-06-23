@@ -12,8 +12,6 @@ package.domain = org.hasneen
 # (str) Source code where the main.py is located
 source.include_exts = py,png,jpg,kv,atlas
 
-# (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas
 
 # (str) Application versioning (method 1)
 version = 1.0

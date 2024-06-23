@@ -1,44 +1,32 @@
-name: CI
-on:
-  push:
-    branches: [ main ]
+name: Build with Buildozer
+
+on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
-
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      # used to cache dependencies with a timeout
-      - name: Get Date
-        id: get-date
-        run: |
-          echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
-        shell: bash
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'zulu'
+        java-version: '11'
 
-      - name: Cache Buildozer global directory
-        uses: actions/checkout@v4
-        with:
-          path: .buildozer_global
-          key: buildozer-global-${{ hashFiles('buildozer.spec') }} # Replace with your path
+    - name: Install Buildozer and dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y python3-pip
+        pip3 install buildozer
 
-      - name: Checkout main directory
-        uses: actions/checkout@v4
-        with:
-          path: main # Replace with the correct path
-          ref: main # Specify the branch or tag you want to checkout
-          token: ${{ secrets.GITHUB_TOKEN }} # Ensure you have appropriate permissions
+    - name: Install NDK
+      run: |
+        mkdir -p $ANDROID_HOME/ndk
+        wget https://dl.google.com/android/repository/android-ndk-r25b-linux.zip
+        unzip android-ndk-r25b-linux.zip -d $ANDROID_HOME/ndk
+        mv $ANDROID_HOME/ndk/android-ndk-r25b $ANDROID_HOME/ndk/25.1.8937393
 
-      - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        id: buildozer
-        with:
-          workdir: main  # Assuming `main` is the directory you want to build in
-          buildozer_version: stable
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: package
-          path: ${{ steps.buildozer.outputs.filename }}
+    - name: Build the APK
+      run: buildozer android debug

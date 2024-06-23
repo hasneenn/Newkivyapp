@@ -1,5 +1,4 @@
 name: CI
-
 on:
   push:
     branches: [ main ]
@@ -11,34 +10,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Upgrade pip
-        run: /bin/python3 -m pip install --upgrade pip
+      # used to cache dependencies with a timeout
+      - name: Get Date
+        id: get-date
+        run: |
+          echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
+        shell: bash
 
       - name: Cache Buildozer global directory
-        uses: actions/cache@v3
+        uses: actions/checkout@v4
         with:
           path: .buildozer_global
-          key: buildozer-global-${{ hashFiles('buildozer.spec') }}
-      
-      - name: Cache Buildozer directory
-        uses: actions/cache@v3
+          key: buildozer-global-${{ hashFiles('buildozer.spec') }} # Replace with your path
+
+      - name: Checkout main directory
+        uses: actions/checkout@v4
         with:
-          path: main 
-          key: buildozer-${{ runner.os }}-${{ github.sha }}
+          path: main # Replace with the correct path
+          ref: main # Specify the branch or tag you want to checkout
+          token: ${{ secrets.GITHUB_TOKEN }} # Ensure you have appropriate permissions
 
       - name: Build with Buildozer
         uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
         with:
-          workdir: main 
+          workdir: main  # Assuming `main` is the directory you want to build in
           buildozer_version: stable
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: package
           path: ${{ steps.buildozer.outputs.filename }}

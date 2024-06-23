@@ -11,6 +11,19 @@ jobs:
 
     - name: Set up JDK
       uses: actions/setup-java@v2
+name: Build with Buildozer
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK
+      uses: actions/setup-java@v2
       with:
         distribution: 'zulu'
         java-version: '11'
@@ -30,10 +43,21 @@ jobs:
         wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
         unzip commandlinetools-linux-8512546_latest.zip -d $ANDROID_HOME/cmdline-tools
         mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+
+    - name: Accept Android SDK licenses
+      env:
+        ANDROID_HOME: ${{ github.workspace }}/android-sdk
+      run: |
         yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses
+
+    - name: Install required Android packages
+      env:
+        ANDROID_HOME: ${{ github.workspace }}/android-sdk
+      run: |
         $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --install "build-tools;30.0.3" "platform-tools" "platforms;android-30" "ndk;25.1.8937393"
         yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses
-        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --install "build-tools;35.0.0"
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --install "build-tools;35.0.0"
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses
 
     - name: Build the APK
       run: buildozer android debug

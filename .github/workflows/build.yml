@@ -19,7 +19,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y python3-pip
-        pip3 install buildozer
+        pip3 install buildozer cython
 
     - name: Install NDK
       run: |

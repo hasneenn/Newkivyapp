@@ -30,14 +30,24 @@ android.api = 30
 # Minimum API your APK will support
 android.minapi = 21
 
+# Android SDK and NDK versions
+android.sdk = 30
+android.ndk = 25b
+
 # Enable Android logcat
 android.logcat_filters = *:S python:D
 
 # Source directory where your main.py is located
-source.dir = main
+source.dir = .
+
+# Additional Java .jar or .aar libraries to add
+# android.add_jars =
 
 [buildozer]
 
 # Log level (1 = debug, 2 = info, 3 = warning, 4 = error)
 log_level = 2
 warn_on_root = 1
+
+# Automatically accept SDK licenses
+android.accept_sdk_license = True

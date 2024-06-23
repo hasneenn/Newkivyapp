@@ -1,4 +1,4 @@
-name: Rest instagram
+name: CI
 on:
   push:
     branches: [ main ]

@@ -7,7 +7,7 @@ title = Rest Instagram
 package.name = Rest Instagram
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = com.Rest.app
+package.domain = com.yashas.app
 
 # (str) Source code where the main.py live
 source.dir = .

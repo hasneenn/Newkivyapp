@@ -1,52 +1,43 @@
 [app]
 
-# (str) Title of your application
+# Title of your application
 title = RecoveryApp
 
-# (str) Package name
+# Package name
 package.name = recoveryapp
 
-# (str) Package domain (needed for android/ios packaging)
+# Package domain (needed for android/ios packaging)
 package.domain = org.hasneen
 
-# (str) Source code where the main.py is located
+# Source code where the main.py is located
 source.include_exts = py,png,jpg,kv,atlas
 
-
-# (str) Application versioning (method 1)
+# Application versioning (method 1)
 version = 1.0
 
-# (list) Application requirements
+# Application requirements
 requirements = python3,kivy,requests
 
-# (str) Supported bootstraps
-android.bootstrap = sdl2
+# Supported bootstraps
+p4a.bootstrap = sdl2
 
-# (list) Permissions
+# Permissions
 android.permissions = INTERNET
 
-# (int) Target Android API, should be as high as possible.
+# Target Android API, should be as high as possible
 android.api = 30
 
-# (int) Minimum API your APK will support.
+# Minimum API your APK will support
 android.minapi = 21
 
-# (int) Android SDK version to use
+# Android SDK version to use
 android.sdk = 30
 
-# (int) Android NDK version to use
+# Android NDK version to use
 android.ndk = 21b
 
-# (bool) Enable Android logcat
+# Enable Android logcat
 android.logcat_filters = *:S python:D
 
-# (list) View your own logcat tags
-android.logcat_filter = *:S python:D
-
-# (bool) Android automatically add permissions
-
-# (list) Additional Java .jar or .aar libraries to add
-#android.add_jars =
-
-# (str) packaging type
-# android.archs = armeabi-v7a, arm64-v8a
+# Additional Java .jar or .aar libraries to add
+# android.add_jars =

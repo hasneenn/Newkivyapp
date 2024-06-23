@@ -44,7 +44,6 @@ android.logcat_filters = *:S python:D
 android.logcat_filter = *:S python:D
 
 # (bool) Android automatically add permissions
-android.permissions = INTERNET
 
 # (list) Additional Java .jar or .aar libraries to add
 #android.add_jars =

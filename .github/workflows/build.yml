@@ -28,13 +28,13 @@ jobs:
       - name: Cache Buildozer directory
         uses: actions/cache@v3
         with:
-          path: .buildozer
+          path: main 
           key: buildozer-${{ runner.os }}-${{ github.sha }}
 
       - name: Build with Buildozer
         uses: ArtemSBulgakov/buildozer-action@v1
         with:
-          workdir: buildozer android debug
+          workdir: main 
           buildozer_version: stable
 
       - name: Upload artifacts

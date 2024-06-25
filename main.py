@@ -8,7 +8,6 @@ from kivy.uix.popup import Popup
 import requests
 
 
-
 class RecoveryApp(App):
     def build(self):
         self.title = 'Account recovery'

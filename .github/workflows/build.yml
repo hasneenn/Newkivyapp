@@ -36,12 +36,12 @@ jobs:
 
     - name: Install buildozer dependencies
       run: |
-        buildozer android update
+        buildozer android update --quiet
 
     - name: Build the APK
       run: |
-        buildozer android clean
-        buildozer android debug
+        buildozer android clean --quiet
+        buildozer android debug --quiet
 
     - name: Upload APK
       uses: actions/upload-artifact@v2

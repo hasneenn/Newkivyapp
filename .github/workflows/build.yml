@@ -34,6 +34,10 @@ jobs:
         cmake-version: 3.18.1
         cache: yes
 
+    - name: Install buildozer dependencies
+      run: |
+        buildozer android update
+
     - name: Build the APK
       run: |
         buildozer android clean

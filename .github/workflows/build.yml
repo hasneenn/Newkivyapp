@@ -34,9 +34,6 @@ jobs:
         cmake-version: 3.18.1
         cache: yes
 
-    - name: Initialize buildozer
-      run: buildozer init
-
     - name: Build the APK
       run: |
         buildozer android clean
